@@ -29,7 +29,7 @@
     th:nth-child(2), td:nth-child(2) { width: 40%; }
     th:nth-child(n+3), td:nth-child(n+3) { width: 6em; }
     input[type="radio"] {
-      transform: scale(2.0);
+      transform: scale(3.0);
       margin: 5px;
     }
 
@@ -39,19 +39,39 @@
     .question {
       margin: 10px 0;
     }
+
+    #loginPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* 画面縦いっぱい */
+  text-align: center;
+  font-size: 1.5em;
+}
+
+#loginPage input[type="email"] {
+  font-size: 1em;
+  padding: 10px;
+  width: 300px;
+  margin-top: 10px;
+}
+
+#loginPage small {
+  font-size: 0.8em;
+  color: red;
+  margin-top: 5px;
+}
   </style>
 </head>
 
 
 <body>
-
-
-
   <div id="loginPage">
     <h1>SDSチェック</h1>
     <label for="emailInput">メールアドレス：</label><br>
     <input type="email" id="emailInput" placeholder="例: example@example.com"><br>
-    <small>※データを送らない場合は空欄でも構いません</small><br><br>
+    <small>※指定のメールアドレス以外はデータベースに書き込めません！</small><br><br>
     <button onclick="proceedToForm()">次へ</button>
   </div>
 
@@ -59,9 +79,10 @@
 
 
   <div id="mainContent">
-  <h1>自己評価式抑うつ性尺度（ＳＤＳ）チェック表</h1>
-  <h2>※ここ２週間の状態を振り返ってチェックしてください。</h2>
-
+    <div style="text-align: center;">
+    <h1>自己評価式抑うつ性尺度（ＳＤＳ）チェック表</h1>
+  <h2>※ここ２週間の状態を振り返ってチェックしてください。</h2> 
+  </div>
   <div style="margin: 20px 0; text-align: center; font-size: 1.5em;">
   <label for="userId">ID：</label>
   <input type="text" id="userId" name="userId" placeholder="例: 123456" style="font-size: 1em; padding: 8px; width: 200px;">
