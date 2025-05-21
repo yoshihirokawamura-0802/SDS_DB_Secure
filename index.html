@@ -150,12 +150,14 @@ window.onload = function() {
 
 
     //点数の計算関数
-
 function calculateScore() {
   const userId = document.getElementById('userId').value.trim();
   const warning = document.getElementById("warning");
   warning.style.display = "none";
   warning.textContent = "";
+
+  const params = new URLSearchParams(window.location.search);
+  const email = params.get("email") || "";
 
   if (!userId) {
     warning.style.display = "block";
@@ -244,9 +246,11 @@ function resetForm() {
 
 
 
-let email = "";  // メールアドレス格納用
+  // メールアドレス格納用
+let email = "";
 
 function proceedToForm() {
+  let email = "";
   const emailInput = document.getElementById('emailInput').value.trim();
   const url = new URL(window.location.href);
   url.searchParams.set('email', emailInput);
