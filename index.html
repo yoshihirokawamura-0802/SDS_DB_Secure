@@ -129,14 +129,32 @@
       [4, 3, 2, 1], [4, 3, 2, 1], [1, 2, 3, 4], [4, 3, 2, 1]
     ];
 
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbz8qdfHWNobd7N8FIZEdue7rzxp2RcHLz8XB0e73elti5taxltj-fccq5KqdL0TMVxT/exec'; // WebアプリのURLに差し替え
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbzzpnXbjnfEMAL_H8DAV5Xcc2299Viho4Y9eHUE4rRPOfDP5W2NuhZDWAEVL-YC_xbw/exec'; // WebアプリのURLに差し替え
 
     
+window.onload = function() {
+  const params = new URLSearchParams(window.location.search);
+  email = params.get('email') || ""; // グローバル変数emailに代入
+  const loginPage = document.getElementById('loginPage');
+  const mainContent = document.getElementById('mainContent');
+  const quizForm = document.getElementById('quizForm');
+
+  // emailがURLにある場合は、自動でフォーム画面へ
+  if (email) {
+    loginPage.style.display = 'none';
+    mainContent.style.display = 'block';
+    quizForm.style.display = 'block';
+  }
+};
+
+
+
     //点数の計算関数
 
 function calculateScore() {
   const userId = document.getElementById('userId').value.trim();
   const warning = document.getElementById("warning");
+  const email = "";  // メールアドレス格納用
   warning.style.display = "none";
   warning.textContent = "";
 
@@ -225,15 +243,16 @@ function resetForm() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+
+
 let email = "";  // メールアドレス格納用
 
 function proceedToForm() {
-      email = document.getElementById('emailInput').value.trim();
-
-      document.getElementById('loginPage').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
-      document.getElementById('quizForm').style.display = 'block';
-    }
+  const emailInput = document.getElementById('emailInput').value.trim();
+  const url = new URL(window.location.href);
+  url.searchParams.set('email', emailInput);
+  window.location.href = url.toString(); // URLにメールを付けてリダイレクト
+}
 
   </script>
 </body>
