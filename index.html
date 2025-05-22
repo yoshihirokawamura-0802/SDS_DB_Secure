@@ -235,11 +235,21 @@ function calculateScore() {
   formData.append("email", email); // ← メールアドレスも送信
 
   fetch(scriptURL, {
-    method: 'POST',
-    body: formData
+  method: "POST",
+  body: formData
   })
-  .then(response => console.log('送信成功:', response))
-  .catch(error => console.error('送信エラー:', error));
+  .then(response => response.text())
+  .then(text => {
+  if (text.trim() === "OK") {
+    alert('送信が完了しました。');
+  } else {
+    alert('送信に失敗しました。サーバー応答：' + text);
+  }
+  })
+  .catch(error => {
+  console.error(error);
+  alert('送信エラー：' + error.message);
+  });
   
 }
 
