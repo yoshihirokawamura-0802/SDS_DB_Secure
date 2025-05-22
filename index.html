@@ -225,14 +225,14 @@ function calculateScore() {
   resultDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
   // Google Apps Scriptへ送信するデータ
-const formData = new FormData();
-formData.append("userId", userId);         // ← 修正
-answers.forEach((score, index) => {
-  formData.append(`q${index + 1}`, score);  // ← 修正（Q1 → q1）
-});
-formData.append("total", total);           // ← 修正（合計点 → total）
-formData.append("evaluation", message);    // ← 修正（評価 → evaluation）
-formData.append("email", email); // ← メールアドレスも送信
+  const formData = new FormData();
+  formData.append("userId", userId);         // ← 修正
+  answers.forEach((score, index) => {
+    formData.append(`q${index + 1}`, score);  // ← 修正（Q1 → q1）
+  });
+  formData.append("total", total);           // ← 修正（合計点 → total）
+  formData.append("evaluation", message);    // ← 修正（評価 → evaluation）
+  formData.append("email", email); // ← メールアドレスも送信
 
 
   fetch(scriptURL, {
