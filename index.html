@@ -171,7 +171,7 @@ window.onload = function() {
 
 
     //点数の計算関数
-function calculateScore() {
+async function calculateScore() {
   const userId = document.getElementById('userId').value.trim();
   const warning = document.getElementById("warning");
   warning.style.display = "none";
@@ -234,23 +234,22 @@ function calculateScore() {
   formData.append("evaluation", message);    // ← 修正（評価 → evaluation）
   formData.append("email", email); // ← メールアドレスも送信
 
-  fetch(scriptURL, {
-  method: "POST",
-  body: formData
-  })
-  .then(response => response.text())
-  .then(text => {
-  if (text.trim() === "OK") {
-    alert('送信が完了しました。');
-  } else {
-    alert('送信に失敗しました。サーバー応答：' + text);
-  }
-  })
-  .catch(error => {
-  console.error(error);
-  alert('送信エラー：' + error.message);
-  });
-  
+  try {
+        const response = await fetch(scriptURL, {
+          method: "POST",
+          body: formData
+          // headersはContent-Typeを指定しない（自動で multipart/form-data になる）
+        });
+        const text = await response.text();
+        if (text.trim() === "OK") {
+          alert('送信が完了しました。');
+        } else {
+          alert('送信に失敗しました。サーバー応答：' + text);
+        }
+      } catch (error) {
+        console.error(error);
+        alert('送信エラー：' + error.message);
+      }
 }
 
 
