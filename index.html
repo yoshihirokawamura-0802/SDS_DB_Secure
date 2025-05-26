@@ -211,11 +211,11 @@ async function calculateScore() {
   //点数からの評価文
   let message = '';
   if (total < 40) {
-    message = '抑うつ性は乏しい';
+    message = '心の安定を保てています';
   } else if (total < 50) {
-    message = '軽度抑うつ性あり';
+    message = '少し心が疲れているサインが見えます';
   } else {
-    message = '中等度以上の抑うつ性あり';
+    message = '一人で抱え込まず、相談してみましょう';
   }
 
   const resultDiv = document.getElementById('result');
