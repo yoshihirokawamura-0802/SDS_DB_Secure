@@ -50,7 +50,7 @@
   font-size: 1.5em;
 }
 
-#loginPage input[type="email"] {
+#loginPage input[type="password"] {
   font-size: 1em;
   padding: 10px;
   width: 300px;
@@ -65,19 +65,18 @@
   </style>
 </head>
 
-
+  
 <body>
+  //ログイン画面
   <div id="loginPage">
     <h1>SDSチェック</h1>
-    <label for="emailInput">メールアドレス：</label><br>
-    <input type="email" id="emailInput" placeholder="例: example@example.com"><br>
-    <small>※指定のメールアドレス以外はデータベースに書き込めません！</small><br><br>
+    <label for="passwordInput">パスワード：</label><br>
+    <input type="password" id="passwordInput" placeholder="例: abc123"><br>
+    <small>※指定のパスワード以外はデータベースに書き込めません！</small><br><br>
     <button onclick="proceedToForm()">次へ</button>
   </div>
 
-
-
-
+  //SDSチェックフォーム
   <div id="mainContent">
     <div style="text-align: center;">
     <h1>自己評価式抑うつ性尺度（ＳＤＳ）チェック表</h1>
@@ -103,10 +102,6 @@
         </tr>
       </thead>
       <tbody id="questionsTable">
-        <!-- 静的に埋め込んだ質問行 -->
-        <!-- 以下20問 -->
-        <!-- 各質問の点数はJS側で制御されるためvalueに注意 -->
-        <!-- 1 -->
         <tr><td>1</td><td class="question-text">気分が沈んで、憂鬱だ</td><td><input type="radio" name="q1" value="0"></td><td><input type="radio" name="q1" value="1"></td><td><input type="radio" name="q1" value="2"></td><td><input type="radio" name="q1" value="3"></td></tr>
         <tr><td>2</td><td class="question-text">朝方が一番気分がよい</td><td><input type="radio" name="q2" value="0"></td><td><input type="radio" name="q2" value="1"></td><td><input type="radio" name="q2" value="2"></td><td><input type="radio" name="q2" value="3"></td></tr>
         <tr><td>3</td><td class="question-text">些細なことで泣いたり、泣きたくなる</td><td><input type="radio" name="q3" value="0"></td><td><input type="radio" name="q3" value="1"></td><td><input type="radio" name="q3" value="2"></td><td><input type="radio" name="q3" value="3"></td></tr>
@@ -150,18 +145,19 @@
       [4, 3, 2, 1], [4, 3, 2, 1], [1, 2, 3, 4], [4, 3, 2, 1]
     ];
 
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbwkNHNA9liTX1AOZFl84YaCpywVk4PqfQ90IZ69gyAB70m_wK-l-oYp9vDFM9rOo9Sd/exec'; // WebアプリのURLに差し替え
+    //googleスプレッドシートのリンク
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwyg16FFqd3kQFHGgplbFPYWNZbsqghWojtFgnThqUbokHlbOztnQVQJ6i2De_QFAyX/exec';
 
-    
+//画面の切り替え用
 window.onload = function() {
   const params = new URLSearchParams(window.location.search);
-  email = params.get('email') || ""; // グローバル変数emailに代入
+  password = params.get('password') || ""; // グローバル変数passwordに代入
   const loginPage = document.getElementById('loginPage');
   const mainContent = document.getElementById('mainContent');
   const quizForm = document.getElementById('quizForm');
 
-  // emailがURLにある場合は、自動でフォーム画面へ
-  if (email) {
+  // passwordがURLにある場合は、自動でフォーム画面へ
+  if (password) {
     loginPage.style.display = 'none';
     mainContent.style.display = 'block';
     quizForm.style.display = 'block';
@@ -170,7 +166,7 @@ window.onload = function() {
 
 
 
-    //点数の計算関数
+//点数の計算関数
 async function calculateScore() {
   const userId = document.getElementById('userId').value.trim();
   const warning = document.getElementById("warning");
@@ -178,7 +174,7 @@ async function calculateScore() {
   warning.textContent = "";
 
   const params = new URLSearchParams(window.location.search);
-  const email = params.get("email") || "";
+  const password = params.get("password") || "";
 
   if (!userId) {
     warning.style.display = "block";
@@ -204,6 +200,7 @@ async function calculateScore() {
     }
   }
 
+  //質問時回答がない項目があったら警告
   if (!allAnswered) {
     warning.style.display = "block";
     warning.textContent = "選択されていない質問があります。すべての質問に回答してください。";
@@ -211,6 +208,7 @@ async function calculateScore() {
     return;
   }
 
+  //点数からの評価文
   let message = '';
   if (total < 40) {
     message = '抑うつ性は乏しい';
@@ -226,14 +224,15 @@ async function calculateScore() {
 
   // Google Apps Scriptへ送信するデータ
   const formData = new FormData();
-  formData.append("userId", userId);         // ← 修正
+  formData.append("userId", userId);
   answers.forEach((score, index) => {
-    formData.append(`q${index + 1}`, score);  // ← 修正（Q1 → q1）
+    formData.append(`q${index + 1}`, score);
   });
-  formData.append("total", total);           // ← 修正（合計点 → total）
-  formData.append("evaluation", message);    // ← 修正（評価 → evaluation）
-  formData.append("email", email); // ← メールアドレスも送信
+  formData.append("total", total);
+  formData.append("evaluation", message);
+  formData.append("password", password);
 
+  //スプレッドシート側にデータを送る
   try {
         const response = await fetch(scriptURL, {
           method: "POST",
@@ -253,7 +252,7 @@ async function calculateScore() {
 }
 
 
-
+//リセットボタンの機能
 function resetForm() {
   // ラジオボタンの選択解除
   const radios = document.querySelectorAll('input[type="radio"]');
@@ -270,21 +269,21 @@ function resetForm() {
   warning.style.display = "none";
   warning.textContent = "";
 
-  // 画面最上部へスクロール（スムーズ）
+  // 画面最上部へスクロール
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 
 
-  // メールアドレス格納用
-let email = "";
+  // パスワードアドレス格納用
+let password = "";
 
 function proceedToForm() {
-  let email = "";
-  const emailInput = document.getElementById('emailInput').value.trim();
+  let password = "";
+  const passwordInput = document.getElementById('passwordInput').value.trim();
   const url = new URL(window.location.href);
-  url.searchParams.set('email', emailInput);
-  window.location.href = url.toString(); // URLにメールを付けてリダイレクト
+  url.searchParams.set('password', passwordInput);
+  window.location.href = url.toString(); // URLにパスワードを付けてリダイレクト
 }
 
   </script>
